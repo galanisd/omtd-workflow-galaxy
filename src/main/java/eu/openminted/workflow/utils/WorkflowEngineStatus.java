@@ -1,8 +1,13 @@
 package eu.openminted.workflow.utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +19,10 @@ import org.springframework.stereotype.Component;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 import com.github.jmchilton.blend4j.galaxy.ToolsClient;
+import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
+import com.github.jmchilton.blend4j.galaxy.beans.Tool;
 import com.github.jmchilton.blend4j.galaxy.beans.ToolSection;
+import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
 
 @Component
 public class WorkflowEngineStatus {
@@ -25,14 +33,30 @@ public class WorkflowEngineStatus {
 	private GalaxyInstance galaxy = null;
 	
 
-	public void testInstance(String msg) {
-		logger.info("Trivial function to test spring :: " + msg);
-		ToolsClient toolClient = galaxy.getToolsClient();
-		List<ToolSection> tools = toolClient.getTools();
-		Iterator<ToolSection> iter = tools.iterator();
-		while (iter.hasNext()) {
-			ToolSection tool = iter.next();
-			logger.info("Tool :: " + tool.getId() + " - " + tool.getName());
+	public void exportWorkflows(String folder) throws IOException {
+		logger.info("Exporting workflows to folder " + folder);
+	
+		// Get workflows
+		WorkflowsClient workflowClient = galaxy.getWorkflowsClient();
+		List<Workflow> workflows = workflowClient.getWorkflows();
+		logger.info("Number of Workflows " + workflows.size());
+		
+		/*
+		Iterator<Workflow> iterWF = workflows.iterator();	
+		while(iterWF.hasNext()) {
+			Workflow workflow = iterWF.next();
+			logger.info("Workflow::" + workflow.getId());
+			
 		}
+		*/
+		String workflowId = workflows.get(0).getId();
+		logger.info(workflowId);
+		String filename = folder + "/" + workflowId;
+		logger.info(filename);
+		String workflowJson = workflowClient.exportWorkflow(workflowId);
+		
+		FileUtils.writeStringToFile(new File(filename), workflowJson);
+		
+		//workflowClient.importWorkflow(json)
 	}
 }
