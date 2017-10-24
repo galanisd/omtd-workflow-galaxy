@@ -23,6 +23,7 @@ import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
 import com.github.jmchilton.blend4j.galaxy.beans.Tool;
 import com.github.jmchilton.blend4j.galaxy.beans.ToolSection;
 import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
+import com.github.jmchilton.blend4j.galaxy.beans.WorkflowDetails;
 
 @Component
 public class WorkflowEngineStatus {
@@ -58,5 +59,29 @@ public class WorkflowEngineStatus {
 		FileUtils.writeStringToFile(new File(filename), workflowJson);
 		
 		//workflowClient.importWorkflow(json)
+	}
+	
+	public Workflow importWorkflow(String filename) throws IOException {
+		logger.info("Importing workflow " + filename);
+		
+		// Get workflows
+		WorkflowsClient workflowClient = galaxy.getWorkflowsClient();
+		
+		String workflow_json = FileUtils.readFileToString(new File(filename));
+		logger.info("Workflow to import::\n" + workflow_json);
+		Workflow importedWorkflow = workflowClient.importWorkflow(workflow_json);
+		return importedWorkflow;
+		
+	}
+	
+	public WorkflowDetails setWorkflowPublished(String workflowId, boolean published) {
+		logger.info("Setting workflow " + workflowId + " as published::" + published);
+		
+		// Get workflows
+		WorkflowsClient workflowClient = galaxy.getWorkflowsClient();
+		WorkflowDetails workflowDetails = workflowClient.showWorkflow(workflowId);
+		workflowDetails.setPublished(published);
+		return workflowDetails;
+		
 	}
 }

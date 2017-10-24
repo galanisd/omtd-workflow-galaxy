@@ -13,7 +13,7 @@ import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 
 @Configuration
 @ComponentScan(value={"eu.openminted.workflow.utils"})
-@PropertySource("classpath:application-export.properties")
+@PropertySource("classpath:application.properties")
 public class WEConfiguration {
 
 	private static final Logger logger = LoggerFactory.getLogger(WEConfiguration.class);
