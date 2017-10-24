@@ -8,8 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
-import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 
 @Configuration
 @ComponentScan(value={"eu.openminted.workflow.utils"})
@@ -19,18 +17,35 @@ public class WEConfiguration {
 	private static final Logger logger = LoggerFactory.getLogger(WEConfiguration.class);
 	
 	
-	@Value("${galaxy.url}")
-	private String galaxyInstanceUrl;
+	@Value("${export.wfengine.url}")
+	private String exportWorkflowEngineUrl;
 
-	@Value("${galaxy.apiKey}")
-	private String galaxyApiKey;
+	@Value("${export.wfengine.apiKey}")
+	private String exportWorkflowEngineApiKey;
 	
-	@Bean 
-	public GalaxyInstance getGalaxyInstance() {
-		logger.info("Galaxy Url :: " + this.galaxyInstanceUrl);
-		logger.info("Galaxy Api :: " + this.galaxyApiKey);
-		GalaxyInstance galaxy = GalaxyInstanceFactory.get(galaxyInstanceUrl, galaxyApiKey);
-		return galaxy;
+	@Bean(name="wf_exporter") 
+	public WorkflowEngineReplicator getWorkflowEngineToExport() {
+		logger.info("Connect to workflow engine for exporting");
+		logger.info("Galaxy Url :: " + this.exportWorkflowEngineUrl);
+		logger.info("Galaxy Api :: " + this.exportWorkflowEngineApiKey);
+		WorkflowEngineReplicator workflow_engine = new WorkflowEngineReplicator(exportWorkflowEngineUrl, exportWorkflowEngineApiKey);
+		return workflow_engine;
+	}
+	
+	
+	@Value("${import.wfengine.url}")
+	private String importWorkflowEngineUrl;
+
+	@Value("${import.wfengine.apiKey}")
+	private String importWorkflowEngineApiKey;
+	
+	@Bean(name="wf_importer") 
+	public WorkflowEngineReplicator getWorkflowEngineToImport() {
+		logger.info("Connect to workflow engine for importing");
+		logger.info("Galaxy Url :: " + this.importWorkflowEngineUrl);
+		logger.info("Galaxy Api :: " + this.importWorkflowEngineApiKey);
+		WorkflowEngineReplicator workflow_engine = new WorkflowEngineReplicator(importWorkflowEngineUrl, importWorkflowEngineApiKey);
+		return workflow_engine;
 	}
 	
 }	
