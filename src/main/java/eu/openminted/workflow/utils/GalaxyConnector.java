@@ -15,15 +15,13 @@ import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
 import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
 
 
+public class GalaxyConnector {
 
-public class WorkflowEngineReplicator {
-
-	private static final Logger logger = LoggerFactory.getLogger(WorkflowEngineReplicator.class);
+	private static final Logger logger = LoggerFactory.getLogger(GalaxyConnector.class);
 	
 	private GalaxyInstance galaxy = null;
 	
-	
-	public WorkflowEngineReplicator(String workflowEngineUrl, String workflowEngineApiKey) {
+	public GalaxyConnector(String workflowEngineUrl, String workflowEngineApiKey) {
 		this.galaxy = GalaxyInstanceFactory.get(workflowEngineUrl, workflowEngineApiKey);
 	}
 
@@ -47,7 +45,7 @@ public class WorkflowEngineReplicator {
 			logger.info("Exporting workflow to " + filename);
 			FileUtils.writeStringToFile(new File(filename), workflowJson);					
 		}
-		return;
+
 	}
 	
 	public void importWorkflows(String folderName) throws IOException {
@@ -60,17 +58,19 @@ public class WorkflowEngineReplicator {
 		File folder = new File(folderName);
 		File[] listOfFiles = folder.listFiles();
 		
-		// Import each workflow description from a file
-		for (File file : listOfFiles) {
-			
-			if (file.isFile() && file.getName().endsWith(".ga")) {
-				String workflow_json = FileUtils.readFileToString(file);
-				logger.info("Workflow to import:: " + file.getName());
-				workflowClient.importWorkflow(workflow_json);				
+		if(listOfFiles.length > 0){
+			// Import each workflow description from a file
+			for (File file : listOfFiles) {
+				
+				if (file.isFile() && file.getName().endsWith(".ga")) {
+					String workflow_json = FileUtils.readFileToString(file);
+					logger.info("Workflow to import:: " + file.getName());
+					workflowClient.importWorkflow(workflow_json);				
+				}
 			}
+		}else{
+			logger.info("No worfklows were found.");
 		}
-		
-		return;
 		
 	}
 	

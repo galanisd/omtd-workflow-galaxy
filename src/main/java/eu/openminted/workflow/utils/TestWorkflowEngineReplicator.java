@@ -9,8 +9,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import eu.openminted.workflow.utils.WEConfiguration;
-import eu.openminted.workflow.utils.WorkflowEngineReplicator;
+import eu.openminted.workflow.utils.ReplicatorConfiguration;
+import eu.openminted.workflow.utils.GalaxyConnector;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -20,15 +20,15 @@ public class TestWorkflowEngineReplicator {
 	
 
 	public static void main(String[] args) throws IOException {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(WEConfiguration.class);
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ReplicatorConfiguration.class);
 		
 		logger.info("Exporting workflows from workflow engine");
-		WorkflowEngineReplicator wfEngineToExport = context.getBean("wf_exporter", WorkflowEngineReplicator.class);
-		wfEngineToExport.exportWorkflows("/home/gkirtzou/foo");
+		GalaxyConnector wfEngineToExport = context.getBean("wf_exporter", GalaxyConnector.class);
+		wfEngineToExport.exportWorkflows("/home/ilsp/Desktop/foo/");
 		
 		logger.info("Importing workflows from workflow engine");
-		WorkflowEngineReplicator wfEngineToImport = context.getBean("wf_importer", WorkflowEngineReplicator.class);
-		wfEngineToImport.importWorkflows("/home/gkirtzou/foo/ToImport/");
+		GalaxyConnector wfEngineToImport = context.getBean("wf_importer", GalaxyConnector.class);
+		wfEngineToImport.importWorkflows("/home/ilsp/Desktop/foo/ToImport/");
 		
 		context.close();
 	
