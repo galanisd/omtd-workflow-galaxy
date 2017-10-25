@@ -49,7 +49,7 @@ public class GalaxyConnector {
 	}
 	
 	public void importWorkflows(String folderName) throws IOException {
-		logger.info("Import workflow from " + folderName);
+		logger.info("Import workflows from " + folderName);
 		
 		// Get workflow client
 		WorkflowsClient workflowClient = galaxy.getWorkflowsClient();
@@ -69,7 +69,7 @@ public class GalaxyConnector {
 				}
 			}
 		}else{
-			logger.info("No worfklows were found.");
+			logger.info("No worfklows were found in " + folderName);
 		}
 		
 	}

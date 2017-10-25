@@ -12,8 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import eu.openminted.workflow.utils.ReplicatorConfiguration;
 import eu.openminted.workflow.utils.GalaxyConnector;
 
-@Configuration
-@PropertySource("classpath:application.properties")
+
 public class TestWorkflowEngineReplicator {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestWorkflowEngineReplicator.class);
